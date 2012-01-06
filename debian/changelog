@@ -1,0 +1,7 @@
+pixman (0.23.7-1slp2+1) unstable; urgency=low
+
+  * Initial version
+  * Git: pkgs/p/pixman
+  * Tag: pixman_0.23.7-1slp2+1
+
+ -- Seongwon Cho <seongwon1.cho@samsung.com>  Thu, 08 Dec 2011 13:45:27 +0900

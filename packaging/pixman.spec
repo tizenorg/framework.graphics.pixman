@@ -1,12 +1,12 @@
 
 Name:       pixman
 Summary:    Pixel manipulation library
-Version:    0.21.6
+Version:    0.23.7
 Release:    1
 Group:      System/Libraries
 License:    MIT
 URL:        http://www.x.org/
-Source0:    http://xorg.freedesktop.org/archive/individual/lib/%{name}-%{version}.tar.gz
+Source0:    http://xorg.freedesktop.org/archive/individual/lib/%{name}-%{version}.tar.bz2
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 

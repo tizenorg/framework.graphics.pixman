@@ -3634,3 +3634,9 @@ generate_bilinear_scanline_func \
 generate_bilinear_scanline_func \
     pixman_scaled_bilinear_scanline_0565_0565_SRC_asm_neon, 0565, 0565, \
     1, 1, 28, BILINEAR_FLAG_UNROLL_4
+
+pixman_asm_function _pixman_arm_check_neon
+    vqadd.u8 d0, d1, d0
+    bx lr
+.endfunc
+

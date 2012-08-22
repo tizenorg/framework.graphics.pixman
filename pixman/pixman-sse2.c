@@ -3291,7 +3291,7 @@ pixman_fill_sse2 (uint32_t *bits,
 	byte_line += stride;
 	w = byte_width;
 
-	while (w >= 1 && ((unsigned long)d & 1))
+	if (w >= 1 && ((unsigned long)d & 1))
 	{
 	    *(uint8_t *)d = data;
 	    w -= 1;
@@ -5982,7 +5982,7 @@ sse2_src_iter_init (pixman_implementation_t *imp, pixman_iter_t *iter)
     int height = iter->height;
 
 #define FLAGS								\
-    (FAST_PATH_STANDARD_FLAGS | FAST_PATH_ID_TRANSFORM)
+    (FAST_PATH_STANDARD_FLAGS | FAST_PATH_ID_TRANSFORM | FAST_PATH_BITS_IMAGE)
 
     if ((iter->flags & ITER_NARROW)				&&
 	(image->common.flags & FLAGS) == FLAGS			&&

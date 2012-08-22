@@ -437,3 +437,9 @@ generate_nearest_scanline_func \
 
 generate_nearest_scanline_func \
     pixman_scaled_nearest_scanline_8888_8888_SRC_asm_armv6, 2,  , 48, 32
+
+pixman_asm_function _pixman_arm_check_v6
+    uqadd8 r1, r1, r2
+    bx lr
+.endfunc
+

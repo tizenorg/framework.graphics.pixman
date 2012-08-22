@@ -46,6 +46,7 @@ config-stamp: autogen-stamp
 	  --mandir=\$${prefix}/share/man \
 	  --infodir=\$${prefix}/share/info \
 	  $(confflags) \
+	  --disable-arm-iwmmxt \
 	  CFLAGS="$(CFLAGS)"
 	touch $@
 

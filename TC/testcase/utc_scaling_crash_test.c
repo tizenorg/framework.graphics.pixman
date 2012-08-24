@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pixman.h>
 
 #include "utils.h"
+#include "pixman.h"
 
 static void startup(void);
 static void cleanup(void);

@@ -3,7 +3,7 @@
 Name:       pixman
 Summary:    Pixel manipulation library
 Version:    0.26.0
-Release:    3
+Release:    4
 Group:      System/Libraries
 License:    MIT
 URL:        http://www.x.org/

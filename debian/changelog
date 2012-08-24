@@ -1,3 +1,11 @@
+pixman (0.26.0-1slp2+4) unstable; urgency=low
+
+  * Fix Build fail of DTS on OBS
+  * Git: framework/graphics/pixman
+  * Tag: pixman_0.26.0-1slp2+4
+
+ -- Seongwon Cho <seongwon1.cho@samsung.com>  Fri, 24 Aug 2012 19:56:54 +0900
+
 pixman (0.26.0-1slp2+3) unstable; urgency=low
 
   * Fix Build fail of DTS on OBS

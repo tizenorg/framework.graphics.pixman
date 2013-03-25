@@ -25,7 +25,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <math.h>
@@ -64,13 +64,13 @@ pixman_transform_point_3d (const struct pixman_transform *transform,
 	               (pixman_fixed_48_16_t) vector->vector[i]);
 	    v += partial >> 16;
 	}
-	
+
 	if (v > pixman_max_fixed_48_16 || v < pixman_min_fixed_48_16)
 	    return FALSE;
-	
+
 	result.vector[j] = (pixman_fixed_t) v;
     }
-    
+
     *vector = result;
 
     if (!result.vector[2])
@@ -91,7 +91,7 @@ pixman_transform_point (const struct pixman_transform *transform,
     for (j = 0; j < 3; j++)
     {
 	v[j] = 0;
-	
+
 	for (i = 0; i < 3; i++)
 	{
 	    partial = ((pixman_fixed_32_32_t) transform->matrix[j][i] *
@@ -99,7 +99,7 @@ pixman_transform_point (const struct pixman_transform *transform,
 	    v[j] += partial >> 2;
 	}
     }
-    
+
     if (!(v[2] >> 16))
 	return FALSE;
 
@@ -110,7 +110,7 @@ pixman_transform_point (const struct pixman_transform *transform,
 	    return FALSE;
 	vector->vector[j] = (pixman_fixed_t) quo;
     }
-    
+
     vector->vector[2] = pixman_fixed_1;
     return TRUE;
 }
@@ -130,7 +130,7 @@ pixman_transform_multiply (struct pixman_transform *      dst,
 	{
 	    pixman_fixed_48_16_t v;
 	    pixman_fixed_32_32_t partial;
-	    
+
 	    v = 0;
 	    for (o = 0; o < 3; o++)
 	    {
@@ -143,7 +143,7 @@ pixman_transform_multiply (struct pixman_transform *      dst,
 
 	    if (v > pixman_max_fixed_48_16 || v < pixman_min_fixed_48_16)
 		return FALSE;
-	    
+
 	    d.matrix[dy][dx] = (pixman_fixed_t) v;
 	}
     }
@@ -187,7 +187,7 @@ pixman_transform_scale (struct pixman_transform *forward,
 	if (!pixman_transform_multiply (forward, &t, forward))
 	    return FALSE;
     }
-    
+
     if (reverse)
     {
 	pixman_transform_init_scale (&t, fixed_inverse (sx),
@@ -195,7 +195,7 @@ pixman_transform_scale (struct pixman_transform *forward,
 	if (!pixman_transform_multiply (reverse, reverse, &t))
 	    return FALSE;
     }
-    
+
     return TRUE;
 }
 
@@ -234,7 +234,7 @@ pixman_transform_rotate (struct pixman_transform *forward,
 	if (!pixman_transform_multiply (reverse, reverse, &t))
 	    return FALSE;
     }
-    
+
     return TRUE;
 }
 
@@ -461,7 +461,7 @@ pixman_transform_from_pixman_f_transform (struct pixman_transform *        t,
 	    t->matrix[j][i] = (pixman_fixed_t) floor (d);
 	}
     }
-    
+
     return TRUE;
 }
 
@@ -471,8 +471,8 @@ pixman_f_transform_invert (struct pixman_f_transform *      dst,
 {
     double det;
     int i, j;
-    static int a[3] = { 2, 2, 1 };
-    static int b[3] = { 1, 0, 0 };
+    static const int a[3] = { 2, 2, 1 };
+    static const int b[3] = { 1, 0, 0 };
 
     det = 0;
     for (i = 0; i < 3; i++)
@@ -486,10 +486,10 @@ pixman_f_transform_invert (struct pixman_f_transform *      dst,
 	    p = -p;
 	det += p;
     }
-    
+
     if (det == 0)
 	return FALSE;
-    
+
     det = 1 / det;
     for (j = 0; j < 3; j++)
     {
@@ -503,10 +503,10 @@ pixman_f_transform_invert (struct pixman_f_transform *      dst,
 
 	    p = (src->m[ai][aj] * src->m[bi][bj] -
 	         src->m[ai][bj] * src->m[bi][aj]);
-	    
+
 	    if (((i + j) & 1) != 0)
 		p = -p;
-	    
+
 	    dst->m[j][i] = det * p;
 	}
     }
@@ -529,7 +529,7 @@ pixman_f_transform_point (const struct pixman_f_transform *t,
 	    a += t->m[j][i] * v->v[i];
 	result.v[j] = a;
     }
-    
+
     if (!result.v[2])
 	return FALSE;
 
@@ -556,7 +556,7 @@ pixman_f_transform_point_3d (const struct pixman_f_transform *t,
 	    a += t->m[j][i] * v->v[i];
 	result.v[j] = a;
     }
-    
+
     *v = result;
 }
 
@@ -579,7 +579,7 @@ pixman_f_transform_multiply (struct pixman_f_transform *      dst,
 	    d.m[dy][dx] = v;
 	}
     }
-    
+
     *dst = d;
 }
 
@@ -615,13 +615,13 @@ pixman_f_transform_scale (struct pixman_f_transform *forward,
 	pixman_f_transform_init_scale (&t, sx, sy);
 	pixman_f_transform_multiply (forward, &t, forward);
     }
-    
+
     if (reverse)
     {
 	pixman_f_transform_init_scale (&t, 1 / sx, 1 / sy);
 	pixman_f_transform_multiply (reverse, reverse, &t);
     }
-    
+
     return TRUE;
 }
 
@@ -654,7 +654,7 @@ pixman_f_transform_rotate (struct pixman_f_transform *forward,
 	pixman_f_transform_init_rotate (&t, c, s);
 	pixman_f_transform_multiply (forward, &t, forward);
     }
-    
+
     if (reverse)
     {
 	pixman_f_transform_init_rotate (&t, c, -s);

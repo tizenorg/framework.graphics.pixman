@@ -8,7 +8,7 @@ main (int argc, char **argv)
 {
 #define WIDTH 40
 #define HEIGHT 40
-    
+
     uint32_t *src1 = malloc (WIDTH * HEIGHT * 4);
     uint32_t *src2 = malloc (WIDTH * HEIGHT * 4);
     uint32_t *src3 = malloc (WIDTH * HEIGHT * 4);
@@ -39,6 +39,6 @@ main (int argc, char **argv)
     pixman_image_composite (PIXMAN_OP_SCREEN, simg3, NULL, dimg, 0, 0, 0, 0, (4 * WIDTH) / 3, HEIGHT, WIDTH, HEIGHT);
 
     show_image (dimg);
-    
+
     return 0;
 }

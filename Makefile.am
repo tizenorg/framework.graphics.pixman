@@ -50,7 +50,7 @@ $(md5_tbz2): $(tar_bz2)
 
 $(gpg_file): $(sha1_tgz)
 	@echo "Please enter your GPG password to sign the checksum."
-	gpg --armor --sign $^ 
+	gpg --armor --sign $^
 
 HASHFILES = $(sha1_tgz) $(sha1_tbz2) $(md5_tgz) $(md5_tbz2)
 

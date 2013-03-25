@@ -72,7 +72,7 @@ test_composite (int      testnum,
 	{ 0x0101, 0x0101, 0x0101, 0x0101 },
 	{ 0x7777, 0x6666, 0x5555, 0x9999 },
     };
-    
+
     FLOAT_REGS_CORRUPTION_DETECTOR_START ();
 
     lcg_srand (testnum);
@@ -81,7 +81,7 @@ test_composite (int      testnum,
     mask_format = RANDOM_ELT (mask_formats);
 
     /* Create source image */
-    
+
     if (lcg_rand_n (4) == 0)
     {
 	src_img = pixman_image_create_solid_fill (
@@ -103,7 +103,7 @@ test_composite (int      testnum,
 	src_y = -(src_height / 4) + lcg_rand_n (src_height * 3 / 2);
 
 	src_stride = (src_stride + 3) & ~3;
-	
+
 	bits = (uint32_t *)make_random_bytes (src_stride * src_height);
 
 	src_img = pixman_image_create_bits (
@@ -115,7 +115,7 @@ test_composite (int      testnum,
 	{
 	    pixman_box16_t clip_boxes[2];
 	    int            n = lcg_rand_n (2) + 1;
-	    
+
 	    for (i = 0; i < n; i++)
 	    {
 		clip_boxes[i].x1 = lcg_rand_n (src_width);
@@ -124,7 +124,7 @@ test_composite (int      testnum,
 		    clip_boxes[i].x1 + lcg_rand_n (src_width - clip_boxes[i].x1);
 		clip_boxes[i].y2 =
 		    clip_boxes[i].y1 + lcg_rand_n (src_height - clip_boxes[i].y1);
-		
+
 		if (verbose)
 		{
 		    printf ("source clip box: [%d,%d-%d,%d]\n",
@@ -132,7 +132,7 @@ test_composite (int      testnum,
 			    clip_boxes[i].x2, clip_boxes[i].y2);
 		}
 	    }
-	    
+
 	    pixman_region_init_rects (&clip, clip_boxes, n);
 	    pixman_image_set_clip_region (src_img, &clip);
 	    pixman_image_set_source_clipping (src_img, 1);
@@ -150,12 +150,12 @@ test_composite (int      testnum,
 	dst_height = lcg_rand_n (MAX_DST_HEIGHT) + 1;
 	dst_stride = dst_width * dst_bpp + lcg_rand_n (MAX_STRIDE) * dst_bpp;
 	dst_stride = (dst_stride + 3) & ~3;
-	
+
 	dst_bits = (uint32_t *)make_random_bytes (dst_stride * dst_height);
 
 	dst_x = -(dst_width / 4) + lcg_rand_n (dst_width * 3 / 2);
 	dst_y = -(dst_height / 4) + lcg_rand_n (dst_height * 3 / 2);
-	
+
 	dst_img = pixman_image_create_bits (
 	    dst_format, dst_width, dst_height, dst_bits, dst_stride);
 
@@ -172,7 +172,7 @@ test_composite (int      testnum,
 	for (i = 0; i < n_traps; ++i)
 	{
 	    pixman_trapezoid_t *t = &(traps[i]);
-	    
+
 	    t->top = random_fixed (MAX_DST_HEIGHT) - MAX_DST_HEIGHT / 2;
 	    t->bottom = t->top + random_fixed (MAX_DST_HEIGHT);
 	    t->left.p1.x = random_fixed (MAX_DST_WIDTH) - MAX_DST_WIDTH / 2;
@@ -185,7 +185,7 @@ test_composite (int      testnum,
 	    t->right.p2.y = t->bottom - random_fixed (50);
 	}
     }
-    
+
     if (lcg_rand_n (8) == 0)
     {
 	pixman_box16_t clip_boxes[2];
@@ -226,7 +226,7 @@ test_composite (int      testnum,
     if (verbose)
     {
 	int j;
-	
+
 	for (i = 0; i < dst_height; i++)
 	{
 	    for (j = 0; j < dst_stride; j++)
@@ -239,7 +239,7 @@ test_composite (int      testnum,
     crc32 = compute_crc32 (0, dst_bits, dst_stride * dst_height);
 
     fence_free (dst_bits);
-    
+
     pixman_image_unref (src_img);
     pixman_image_unref (dst_img);
     fence_free (traps);
@@ -251,6 +251,6 @@ test_composite (int      testnum,
 int
 main (int argc, const char *argv[])
 {
-    return fuzzer_test_main("composite traps", 40000, 0xE3112106,
+    return fuzzer_test_main("composite traps", 40000, 0x33BFAA55,
 			    test_composite, argc, argv);
 }

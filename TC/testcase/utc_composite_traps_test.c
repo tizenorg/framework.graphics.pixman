@@ -277,7 +277,7 @@ static void utc_pixman_composite_traps(void)
 {
     int ret;
 
-    ret = fuzzer_test_main("composite traps", 40000, 0xE3112106,
+    ret = fuzzer_test_main("composite traps", 40000, 0x33BFAA55,
 			    test_composite, 1, NULL);
 
     if(ret)

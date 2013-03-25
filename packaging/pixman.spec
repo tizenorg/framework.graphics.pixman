@@ -1,9 +1,9 @@
-#sbs-git:slp/pkgs/p/pixman pixman 0.26.0 67eba3516f06fef40915917d7396b68108ee6316
+#sbs-git:slp/pkgs/p/pixman pixman 0.28.2 67eba3516f06fef40915917d7396b68108ee6316
 
 Name:       pixman
 Summary:    Pixel manipulation library
-Version:    0.26.0
-Release:    8
+Version:    0.28.2
+Release:    1
 Group:      System/Libraries
 License:    MIT
 URL:        http://www.x.org/

@@ -30,7 +30,7 @@
 
 #include <stdlib.h>
 
-static pixman_implementation_t *global_implementation;
+pixman_implementation_t *global_implementation;
 
 #ifdef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
 static void __attribute__((constructor))
@@ -39,16 +39,6 @@ pixman_constructor (void)
     global_implementation = _pixman_choose_implementation ();
 }
 #endif
-
-static force_inline pixman_implementation_t *
-get_implementation (void)
-{
-#ifndef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
-    if (!global_implementation)
-	global_implementation = _pixman_choose_implementation ();
-#endif
-    return global_implementation;
-}
 
 typedef struct operator_info_t operator_info_t;
 
@@ -150,9 +140,9 @@ optimize_operator (pixman_op_t     op,
     pixman_bool_t is_source_opaque, is_dest_opaque;
 
 #define OPAQUE_SHIFT 13
-    
+
     COMPILE_TIME_ASSERT (FAST_PATH_IS_OPAQUE == (1 << OPAQUE_SHIFT));
-    
+
     is_dest_opaque = (dst_flags & FAST_PATH_IS_OPAQUE);
     is_source_opaque = ((src_flags & mask_flags) & FAST_PATH_IS_OPAQUE);
 
@@ -234,19 +224,19 @@ clip_source_image (pixman_region32_t * region,
  * returns FALSE if the final region is empty.  Indistinguishable from
  * an allocation failure, but rendering ignores those anyways.
  */
-static pixman_bool_t
-pixman_compute_composite_region32 (pixman_region32_t * region,
-                                   pixman_image_t *    src_image,
-                                   pixman_image_t *    mask_image,
-                                   pixman_image_t *    dest_image,
-                                   int32_t             src_x,
-                                   int32_t             src_y,
-                                   int32_t             mask_x,
-                                   int32_t             mask_y,
-                                   int32_t             dest_x,
-                                   int32_t             dest_y,
-                                   int32_t             width,
-                                   int32_t             height)
+pixman_bool_t
+_pixman_compute_composite_region32 (pixman_region32_t * region,
+				    pixman_image_t *    src_image,
+				    pixman_image_t *    mask_image,
+				    pixman_image_t *    dest_image,
+				    int32_t             src_x,
+				    int32_t             src_y,
+				    int32_t             mask_x,
+				    int32_t             mask_y,
+				    int32_t             dest_x,
+				    int32_t             dest_y,
+				    int32_t             width,
+				    int32_t             height)
 {
     region->extents.x1 = dest_x;
     region->extents.x2 = dest_x + width;
@@ -537,7 +527,7 @@ analyze_extent (pixman_image_t       *image,
 
     if (!compute_transformed_extents (transform, &exp_extents, &transformed))
 	return FALSE;
-    
+
     if (!IS_16_16 (transformed.x1 + x_off - 8 * pixman_fixed_e)	||
 	!IS_16_16 (transformed.y1 + y_off - 8 * pixman_fixed_e)	||
 	!IS_16_16 (transformed.x2 + x_off + 8 * pixman_fixed_e + width)	||
@@ -615,6 +605,7 @@ pixman_image_composite32 (pixman_op_t      op,
     if ((mask_format == PIXMAN_a8r8g8b8 || mask_format == PIXMAN_a8b8g8r8) &&
 	(src->type == BITS && src->bits.bits == mask->bits.bits)	   &&
 	(src->common.repeat == mask->common.repeat)			   &&
+	(src_flags & mask_flags & FAST_PATH_ID_TRANSFORM)		   &&
 	(src_x == mask_x && src_y == mask_y))
     {
 	if (src_format == PIXMAN_x8b8g8r8)
@@ -625,7 +616,7 @@ pixman_image_composite32 (pixman_op_t      op,
 
     pixman_region32_init (&region);
 
-    if (!pixman_compute_composite_region32 (
+    if (!_pixman_compute_composite_region32 (
 	    &region, src, mask, dest,
 	    src_x, src_y, mask_x, mask_y, dest_x, dest_y, width, height))
     {
@@ -679,7 +670,7 @@ pixman_image_composite32 (pixman_op_t      op,
      */
     op = optimize_operator (op, src_flags, mask_flags, dest_flags);
 
-    if (_pixman_lookup_composite_function (
+    if (_pixman_implementation_lookup_composite (
 	    get_implementation (), op,
 	    src_format, src_flags, mask_format, mask_flags, dest_format, dest_flags,
 	    &imp, &func))
@@ -733,7 +724,7 @@ pixman_image_composite (pixman_op_t      op,
                         uint16_t         width,
                         uint16_t         height)
 {
-    pixman_image_composite32 (op, src, mask, dest, src_x, src_y, 
+    pixman_image_composite32 (op, src, mask, dest, src_x, src_y,
                               mask_x, mask_y, dest_x, dest_y, width, height);
 }
 
@@ -784,9 +775,9 @@ color_to_uint32 (const pixman_color_t *color)
 }
 
 static pixman_bool_t
-color_to_pixel (pixman_color_t *     color,
-                uint32_t *           pixel,
-                pixman_format_code_t format)
+color_to_pixel (const pixman_color_t *color,
+                uint32_t *            pixel,
+                pixman_format_code_t  format)
 {
     uint32_t c = color_to_uint32 (color);
 
@@ -843,7 +834,7 @@ color_to_pixel (pixman_color_t *     color,
 PIXMAN_EXPORT pixman_bool_t
 pixman_image_fill_rectangles (pixman_op_t                 op,
                               pixman_image_t *            dest,
-                              pixman_color_t *            color,
+			      const pixman_color_t *      color,
                               int                         n_rects,
                               const pixman_rectangle16_t *rects)
 {
@@ -875,14 +866,14 @@ pixman_image_fill_rectangles (pixman_op_t                 op,
 
     if (boxes != stack_boxes)
         free (boxes);
-    
+
     return result;
 }
 
 PIXMAN_EXPORT pixman_bool_t
 pixman_image_fill_boxes (pixman_op_t           op,
                          pixman_image_t *      dest,
-                         pixman_color_t *      color,
+                         const pixman_color_t *color,
                          int                   n_boxes,
                          const pixman_box32_t *boxes)
 {
@@ -891,7 +882,7 @@ pixman_image_fill_boxes (pixman_op_t           op,
     int i;
 
     _pixman_image_validate (dest);
-    
+
     if (color->alpha == 0xffff)
     {
         if (op == PIXMAN_OP_OVER)
@@ -1027,6 +1018,7 @@ pixman_format_supported_source (pixman_format_code_t format)
     case PIXMAN_a2r10g10b10:
     case PIXMAN_x2r10g10b10:
     case PIXMAN_a8r8g8b8:
+    case PIXMAN_a8r8g8b8_sRGB:
     case PIXMAN_x8r8g8b8:
     case PIXMAN_a8b8g8r8:
     case PIXMAN_x8b8g8r8:
@@ -1124,7 +1116,7 @@ pixman_compute_composite_region (pixman_region16_t * region,
 
     pixman_region32_init (&r32);
 
-    retval = pixman_compute_composite_region32 (
+    retval = _pixman_compute_composite_region32 (
 	&r32, src_image, mask_image, dest_image,
 	src_x, src_y, mask_x, mask_y, dest_x, dest_y,
 	width, height);

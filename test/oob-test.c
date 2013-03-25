@@ -8,13 +8,13 @@ typedef struct
     int				height;
     int				stride;
     pixman_format_code_t	format;
-    
+
 } image_info_t;
 
 typedef struct
 {
     pixman_op_t		op;
-    
+
     image_info_t	src;
     image_info_t	dest;
 
@@ -73,7 +73,7 @@ make_image (const image_info_t *info)
 
     return pixman_image_create_bits (info->format, info->width, info->height, (uint32_t *)data, info->stride);
 }
-    
+
 static void
 test_composite (const composite_info_t *info)
 {
@@ -96,6 +96,6 @@ main (int argc, char **argv)
 
     for (i = 0; i < ARRAY_LENGTH (info); ++i)
 	test_composite (&info[i]);
-    
+
     return 0;
 }

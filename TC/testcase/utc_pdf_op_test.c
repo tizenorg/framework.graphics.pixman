@@ -58,10 +58,9 @@ static const uint32_t pixels[] =
 
 static void utc_pixman_pdf_op(void)
 {
-
     int o, s, m, d;
 
-    enable_fp_exceptions();
+    enable_divbyzero_exceptions();
 
     for (o = 0; o < ARRAY_LENGTH (pdf_ops); ++o)
     {

@@ -1,3 +1,11 @@
+pixman (0.28.2-1slp2+1) unstable; urgency=low
+
+  * Update pixman to 0.28.2
+  * Git: framework/graphics/pixman
+  * Tag: pixman_0.28.2-1slp2+1
+
+ -- Seongwon Cho <seongwon1.cho@samsung.com>  Mon, 14 Jan 2013 15:05:40 +0900
+
 pixman (0.26.0-1slp2+8) unstable; urgency=low
 
   * Add license file

@@ -110,7 +110,7 @@ static void utc_pixman_a1_trap1(void)
     pixman_fixed_t r_inner;
     pixman_fixed_t r_outer;
 
-    enable_fp_exceptions();
+    enable_divbyzero_exceptions();
 
     for (i = 0; i < WIDTH * HEIGHT; ++i)
 	dest[i] = 0x4f00004f; /* pale blue */

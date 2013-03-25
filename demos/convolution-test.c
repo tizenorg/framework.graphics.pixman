@@ -10,7 +10,7 @@ main (int argc, char **argv)
 #define HEIGHT 200
 
 #define d2f pixman_double_to_fixed
-    
+
     uint32_t *src = malloc (WIDTH * HEIGHT * 4);
     uint32_t *mask = malloc (WIDTH * HEIGHT * 4);
     uint32_t *dest = malloc (WIDTH * HEIGHT * 4);
@@ -42,6 +42,6 @@ main (int argc, char **argv)
     pixman_image_composite (PIXMAN_OP_OVER, simg, mimg, dimg, 0, 0, 0, 0, 0, 0, WIDTH, HEIGHT);
 
     show_image (dimg);
-    
+
     return 0;
 }

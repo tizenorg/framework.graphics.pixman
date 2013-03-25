@@ -12,7 +12,7 @@ main (int argc, char **argv)
 
 #define POINT(x,y)							\
     { pixman_double_to_fixed ((x)), pixman_double_to_fixed ((y)) }
-    
+
     pixman_image_t *src_img, *dest_img;
     pixman_triangle_t tris[4] =
     {
@@ -27,10 +27,10 @@ main (int argc, char **argv)
 
     for (i = 0; i < WIDTH * HEIGHT; ++i)
 	bits[i] = (i / HEIGHT) * 0x01010000;
-    
+
     src_img = pixman_image_create_solid_fill (&color);
     dest_img = pixman_image_create_bits (PIXMAN_a8r8g8b8, WIDTH, HEIGHT, bits, WIDTH * 4);
-    
+
     pixman_composite_triangles (PIXMAN_OP_ATOP_REVERSE,
 				src_img,
 				dest_img,
@@ -39,10 +39,10 @@ main (int argc, char **argv)
 				-5, 5,
 				ARRAY_LENGTH (tris), tris);
     show_image (dest_img);
-    
+
     pixman_image_unref (src_img);
     pixman_image_unref (dest_img);
     free (bits);
-    
+
     return 0;
 }

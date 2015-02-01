@@ -60,3 +60,4 @@ cat COPYING > %{buildroot}/usr/share/license/%{name}
 %{_includedir}/pixman-1/pixman-version.h
 %{_libdir}/libpixman-1*.so
 %{_libdir}/pkgconfig/pixman-1.pc
+

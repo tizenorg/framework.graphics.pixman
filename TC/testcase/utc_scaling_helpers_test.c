@@ -76,7 +76,6 @@ bilinear_pad_repeat_get_scanline_bounds_ref (int32_t        source_image_width,
 
 static void utc_pixman_scaling_helpers(void)
 {
-
     int i;
     for (i = 0; i < 10000; i++)
     {

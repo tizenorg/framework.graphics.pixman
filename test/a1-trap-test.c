@@ -20,7 +20,7 @@ main (int argc, char **argv)
 
     memset (mbits, 0, WIDTH * HEIGHT);
     memset (bits, 0xff, WIDTH * HEIGHT * 4);
-    
+
     trap.top.l = pixman_double_to_fixed (0.5);
     trap.top.r = pixman_double_to_fixed (1.5);
     trap.top.y = pixman_double_to_fixed (0.5);
@@ -34,7 +34,7 @@ main (int argc, char **argv)
     src_img = pixman_image_create_solid_fill (&red);
     dest_img = pixman_image_create_bits (
 	PIXMAN_a8r8g8b8, WIDTH, HEIGHT, bits, WIDTH * 4);
-    
+
     pixman_add_traps (mask_img, 0, 0, 1, &trap);
 
     pixman_image_composite (PIXMAN_OP_OVER,
@@ -45,6 +45,6 @@ main (int argc, char **argv)
     assert (bits[1] == 0xffffffff);
     assert (bits[1 * WIDTH + 0] == 0xffffffff);
     assert (bits[1 * WIDTH + 1] == 0xffffffff);
-    
+
     return 0;
 }

@@ -52,7 +52,7 @@ main ()
     b = pixman_region32_rectangles (&r1, &i);
 
     assert (i == 1);
-    
+
     while (i--)
     {
 	assert (b[i].x1 < b[i].x2);

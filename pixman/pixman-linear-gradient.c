@@ -152,7 +152,7 @@ linear_get_scanline_narrow (pixman_iter_t  *iter,
 	    invden = pixman_fixed_1 * (double) pixman_fixed_1 /
 		(l * (double) v.vector[2]);
 	    v2 = v.vector[2] * (1. / pixman_fixed_1);
-	    t = ((dx * v.vector[0] + dy * v.vector[1]) - 
+	    t = ((dx * v.vector[0] + dy * v.vector[1]) -
 		 (dx * linear->p1.x + dy * linear->p1.y) * v2) * invden;
 	    inc = (dx * unit.vector[0] + dy * unit.vector[1]) * invden;
 	}
@@ -202,7 +202,7 @@ linear_get_scanline_narrow (pixman_iter_t  *iter,
 		    invden = pixman_fixed_1 * (double) pixman_fixed_1 /
 			(l * (double) v.vector[2]);
 		    v2 = v.vector[2] * (1. / pixman_fixed_1);
-		    t = ((dx * v.vector[0] + dy * v.vector[1]) - 
+		    t = ((dx * v.vector[0] + dy * v.vector[1]) -
 			 (dx * linear->p1.x + dy * linear->p1.y) * v2) * invden;
 		}
 
@@ -227,7 +227,8 @@ linear_get_scanline_wide (pixman_iter_t *iter, const uint32_t *mask)
 {
     uint32_t *buffer = linear_get_scanline_narrow (iter, NULL);
 
-    pixman_expand ((uint64_t *)buffer, buffer, PIXMAN_a8r8g8b8, iter->width);
+    pixman_expand_to_float (
+	(argb_t *)buffer, buffer, PIXMAN_a8r8g8b8, iter->width);
 
     return buffer;
 }
@@ -238,7 +239,7 @@ _pixman_linear_gradient_iter_init (pixman_image_t *image, pixman_iter_t  *iter)
     if (linear_gradient_is_horizontal (
 	    iter->image, iter->x, iter->y, iter->width, iter->height))
     {
-	if (iter->flags & ITER_NARROW)
+	if (iter->iter_flags & ITER_NARROW)
 	    linear_get_scanline_narrow (iter, NULL);
 	else
 	    linear_get_scanline_wide (iter, NULL);
@@ -247,7 +248,7 @@ _pixman_linear_gradient_iter_init (pixman_image_t *image, pixman_iter_t  *iter)
     }
     else
     {
-	if (iter->flags & ITER_NARROW)
+	if (iter->iter_flags & ITER_NARROW)
 	    iter->get_scanline = linear_get_scanline_narrow;
 	else
 	    iter->get_scanline = linear_get_scanline_wide;
@@ -255,8 +256,8 @@ _pixman_linear_gradient_iter_init (pixman_image_t *image, pixman_iter_t  *iter)
 }
 
 PIXMAN_EXPORT pixman_image_t *
-pixman_image_create_linear_gradient (pixman_point_fixed_t *        p1,
-                                     pixman_point_fixed_t *        p2,
+pixman_image_create_linear_gradient (const pixman_point_fixed_t *  p1,
+                                     const pixman_point_fixed_t *  p2,
                                      const pixman_gradient_stop_t *stops,
                                      int                           n_stops)
 {

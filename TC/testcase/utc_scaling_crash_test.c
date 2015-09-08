@@ -200,7 +200,6 @@ do_test (int32_t		dst_size,
 
 static void utc_pixman_scaling_crash(void)
 {
-
     int i;
 
     pixman_disable_out_of_bounds_workaround ();
